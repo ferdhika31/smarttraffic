@@ -1,0 +1,50 @@
+Hasil tokenize lib
+"text": "15.35 wib Arus lalulintas simpang Jl.A Yani - Jakarta meriah lancar dari arah timur ke barat @RTMC_PoldaJabar\u2026 ",
+          
+tokenisasi_kalimat(text)
+"tokenize": [
+               "15.35",
+               "wib",
+               "Arus",
+               "lalulintas",
+               "simpang",
+               "Jl.A",
+               "Yani",
+               "-",
+               "Jakarta",
+               "meriah",
+               "lancar",
+               "dari",
+               "arah",
+               "timur",
+               "ke",
+               "barat",
+               "@RTMC_PoldaJabar\u2026",
+               ""
+          ]
+
+tknzr.tokenize(text)
+
+"tokenize": [
+               "15.35",
+               "wib",
+               "Arus",
+               "lalulintas",
+               "simpang",
+               "Jl",
+               ".",
+               "A",
+               "Yani",
+               "-",
+               "Jakarta",
+               "meriah",
+               "lancar",
+               "dari",
+               "arah",
+               "timur",
+               "ke",
+               "barat",
+               "@RTMC_PoldaJabar",
+               "\u2026"
+          ]
+
