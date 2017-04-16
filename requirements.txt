@@ -1,0 +1,5 @@
+bottle
+twython
+nltk
+openpyxl
+pymongo
