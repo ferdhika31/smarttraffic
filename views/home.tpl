@@ -30,14 +30,15 @@
         $.post('{{root}}/handler', param, function(data) {
             $("#result").html("");
 
-            for (var i = data.length - 1; i >= 0; i--) {
+            for (var i = 0; i < data.length; i++) {
                 html = "id => "+data[i].id+"<br>";
                 html += "text => "+data[i].text+"<br>";
                 html += "normal => "+data[i].normal+"<br>";
+                html += "tagger => "+data[i].tagger+"<br>";
                 html += "<hr>";
 
                 $("#result").append(html);
-               console.log(data[i]);
+               
             }
             
         });

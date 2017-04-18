@@ -15,7 +15,6 @@ import json, re
 
 from libtraffic import *
 
-
 @route('favicon.ico')
 def favicon():
 	return static_file('favicon.ico', root='static/')
@@ -41,7 +40,9 @@ def tweet():
 	for item in data:
 		
         # Hapus link yang ada di kalimat
-		text = remove_urls(item['text'])
+		text = remove_urls(item['text']).lower()
+		# replace -
+		text = text.replace("-", " - ")
 		# Tokenizer
 		tknzr = TweetTokenizer()
 		tok = tknzr.tokenize(text)
@@ -50,9 +51,11 @@ def tweet():
 		txtNormal = ""
 		n=1
 		for kata in tok:
+			print kata
 			data = db.KamusNormalisasi.find_one({ 'kata': kata })
 			if n != 1:
 				txtNormal += " "
+
 			if data:
 				txtNormal += data['maksud']
 			else :
@@ -64,7 +67,7 @@ def tweet():
 			'text'      : text,
 			'created_at': item['created_at'],
 			'normal'	: txtNormal,
-			# 'tagger'	: tag(txtNormal)
+			'tagger'	: tag(txtNormal)
 		})
 
         # db.TweetsMentah.insert_one(
@@ -86,8 +89,9 @@ def default_handler():
 	maxTweet = request.forms.get('maxTweet', '')
 	refreshKamus = request.forms.get('refereshKamus')
 
-	if(refreshKamus==1):
+	if(int(refreshKamus)==1):
 		init_kamus()
+		print "Refresh kamus"
 	
 	return tweet()
 

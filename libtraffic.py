@@ -2,6 +2,8 @@
 # @Author			: Ferdhika
 # @Date				: 2017-04-16 14:56:41
 
+from bottle import response
+
 # Library twython twitter
 from twython import Twython
 
@@ -71,7 +73,7 @@ def init_kamus():
 
 # Function tagger
 def tag(teks):
-	response.content_type = 'text/plain'
+	response.content_type = 'application/json'
 	lines = teks.strip().split("\n")
 	result = []
 	try:
