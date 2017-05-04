@@ -24,6 +24,17 @@ def favicon():
 def index():
 	return { 'apptitle':'SmartTraffic', 'root':request.environ.get('SCRIPT_NAME') }
 
+@route('/test')
+def test():
+	response.content_type = 'application/json'
+
+	init_data_jalan()
+	teks = "06.31 wib arus lalu lintas di jl.ters buah batu sampai aceh terpantau meriah lancar"
+
+	res = tag(jalan(teks))
+
+	return sentence(res)
+
 @route('/tweet')
 @post('/tweet')
 def tweet():
@@ -32,7 +43,8 @@ def tweet():
 	maxTweet = request.forms.get('maxTweet', 10)
 	
 	# dishub_bdgkab
-	data = getTweet('tmc_restabesbdg',maxTweet)
+	# LalinProyek
+	data = getTweet('LalinProyek',maxTweet)
 
 	kirim = []
 
@@ -47,11 +59,11 @@ def tweet():
 		tknzr = TweetTokenizer()
 		tok = tknzr.tokenize(text)
 
-		# Normalisasi
+		# Normalisasi lewat kamus
 		txtNormal = ""
 		n=1
 		for kata in tok:
-			print kata
+			# print kata
 			data = db.KamusNormalisasi.find_one({ 'kata': kata })
 			if n != 1:
 				txtNormal += " "
@@ -62,21 +74,17 @@ def tweet():
 				txtNormal += kata
 			n=n+1
 
+		#remove mention
+		txtNormal = remove_mention(txtNormal)
+
 		kirim.append({
 			'id'        : item['id'],
 			'text'      : text,
 			'created_at': item['created_at'],
-			'normal'	: txtNormal,
-			'tagger'	: tag(txtNormal)
+			'normal'	: jalan(txtNormal),
+			'tagger'	: tag(jalan(txtNormal)),
+			'sentence'	: sentence(tag(jalan(txtNormal)))
 		})
-
-        # db.TweetsMentah.insert_one(
-        # {
-        #     'id'        : item['id'],
-        #     'text'      : text,
-        #     'created_at': item['created_at'],
-        #     'tokenize'  : tknzr.tokenize(text)
-        # })
 
 		no=no+1
 
@@ -91,6 +99,7 @@ def default_handler():
 
 	if(int(refreshKamus)==1):
 		init_kamus()
+		init_data_jalan()
 		print "Refresh kamus"
 	
 	return tweet()
@@ -107,7 +116,7 @@ def main():
         util.run_wsgi_app(default_app())
     else:
         init_tag()
-        run(host='localhost', port=8181, reloader=True, debug=True)
+        run(host='localhost', port=8081, reloader=True, debug=True)
 
 if __name__ == '__main__':
     main()

@@ -39,5 +39,5 @@ Project:
 
 [Project]: <https://github.com/ferdhika31/smarttraffic/>
 [Peb Ruswono Aryan]: <https://github.com/pebbie>
-[Pebahasa]: <http://daringfireball.net>
+[Pebahasa]: <https://github.com/pebbie/pebahasa>
 [Git]: <https://git-scm.com/>
