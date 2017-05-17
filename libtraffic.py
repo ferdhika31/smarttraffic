@@ -19,6 +19,14 @@ import suku
 from tokenization import *
 from termextract import *
 
+# NLTK
+from nltk.tokenize import word_tokenize
+import nltk
+
+from textblob import TextBlob
+from textblob.classifiers import NaiveBayesClassifier
+
+
 '''
 GLOBAL VARIABLE
 '''
@@ -27,6 +35,32 @@ client = MongoClient('localhost:27017')
 db = client.ProyekData # Nama database
 
 mt = None
+
+# Function clasify
+def klasify(text):
+	hasil = 'mct'
+	train = [
+		('lancar', 'lcr'),
+		('peningkatan volume kendaraan', 'mct'),
+		('ramai', 'mct'),
+		('normal', 'lcr'),
+		('padat merayap', 'mct'),
+		('meriah','mct'),
+		('antrian','mct'),
+		('penyempitan','mct'),
+		('sepi','lcr'),
+		('gabisa lewat','mct'),
+		('macet','mct'),
+	]
+	cl = NaiveBayesClassifier(train)
+	cl.classify("macet")
+	'mct'
+	blob = TextBlob(text, classifier=cl)
+	for s in blob.sentences:
+		hasil = s.classify()
+		# print(s.classify())
+
+	return hasil
 
 # Function ambil tweet
 def getTweet(username, jumlah):
@@ -105,6 +139,8 @@ def jalan(teks):
 
 	for x in data:
 		teks = teks.replace(x['kata'], x['jadi'], 4)
+		teks = teks.replace('jl ', 'jl.')
+		teks = teks.replace('jl.. ', 'jl.')
 
 	return teks
 
@@ -126,10 +162,14 @@ def tag(teks):
 	return "\n".join(result)
 
 # Function sentence
-def sentence(tweet):
+# @Param tweet adalah tweet yang sudah di postag
+# @Param twt adalah tweet yang sudah di normal
+def sentence(tweet, twt):
 	response.content_type = 'application/json'
  
 	res = remove_mention(tweet)
+
+	twt = twt.replace('.',' ')
  
 	res = res.split(' ')
 	tag = []    
@@ -137,7 +177,7 @@ def sentence(tweet):
 	tmp=1
 	
 	kirim = []
-	tampil = []
+	tampil = {}
 
 	cdp = False
 	nnp = False
@@ -165,16 +205,18 @@ def sentence(tweet):
 
 	if cdp and nnp:
 		if sampai:
-			tampil.append({
-				'waktu' : kirim[0],
-				'dari' : kirim[1],
-				'sampai' : kirim[2]   
-			});
+			tampil = {
+				'jam' : kirim[0],
+				'dari' : kirim[1].replace('.', ' '),
+				'sampai' : kirim[2].replace('.', ' '),
+				'kondisi' : klasify(twt)   
+			};
 		else:
-			tampil.append({
-				'waktu' : kirim[0],
-				'dari' : kirim[1] 
-			});
+			tampil = {
+				'jam' : kirim[0],
+				'dari' : kirim[1],
+				'kondisi' : klasify(twt) 
+			};
 
 	tampil = json.dumps(tampil, sort_keys=True, indent=5)
 

@@ -1,5 +1,12 @@
 # SmartTraffic
 Tugas Mata Kuliah Proyek2 - Smart Traffic
+Anggota Kelompok : 
+1. Anggastya DAHP
+2. Fahmi Fathurahman NH
+3. Ferdhika Yudira D
+4. Gita Suciana R
+5. Maya Sri R 
+6. Muhammad Edwin
 
 ## Overview
 * [Installation](#installation)

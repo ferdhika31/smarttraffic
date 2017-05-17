@@ -31,10 +31,11 @@
             $("#result").html("");
 
             for (var i = 0; i < data.length; i++) {
-                html = "id => "+data[i].id+"<br>";
-                html += "text => "+data[i].text+"<br>";
-                html += "normal => "+data[i].normal+"<br>";
-                html += "tagger => "+data[i].tagger+"<br>";
+                html = "id => "+data[i].idTweet+"<br>";
+                html += "dari => "+data[i].dari+"<br>";
+                html += "sampai => "+data[i].sampai+"<br>";
+                html += "jam => "+data[i].jam+"<br>";
+                html += "kondisi => "+data[i].kondisi+"<br>";
                 html += "<hr>";
 
                 $("#result").append(html);
