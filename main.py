@@ -44,6 +44,18 @@ def test():
 def visualisasi():
 	return { 'apptitle':'SmartTraffic', 'root':request.environ.get('SCRIPT_NAME') }
 
+@route('/klasifikasi')
+@view('klasify')
+def klasifikasi():
+	return { 'apptitle':'SmartTraffic', 'root':request.environ.get('SCRIPT_NAME') }
+
+@route('/cekKla')
+@post('cekKla')
+def cekKla():
+	txt = request.forms.get('teks', '07.27 waktu indonesia barat situasi lalu lintas jl jakarta sampai purwakarta terpantau ramai')
+
+	return klasify(txt)
+
 @route('/tweet')
 @post('/tweet')
 def tweet():
@@ -53,7 +65,7 @@ def tweet():
 
 	# dishub_bdgkab
 	# LalinProyek
-	data = getTweet('tmc_restabesbdg',maxTweet)
+	data = getTweet('LalinProyek',maxTweet)
 
 	# Inisialisasi atau kalo ada kamus yng baru
 	# init_kamus()
@@ -100,15 +112,15 @@ def tweet():
 				'dari'		: sntc['dari'].replace('.',' '),
 				'sampai'	: sntc['sampai'].replace('.',' '),
 				'waktu'		: time.strftime('%d-%m-%Y', time.strptime(item['created_at'],'%a %b %d %H:%M:%S +0000 %Y')),
-				'jam'		: sntc['jam'],
+				'pukul'		: sntc['jam'],
 				'kondisi'	: sntc['kondisi']
 			})
-		else:
+		elif sntc.has_key("id"): #kalo ada data
 			kirim.append({
 				'idTweet'   : item['id'],
 				'dari'		: sntc['dari'].replace('.',' '),
 				'waktu'		: time.strftime('%d-%m-%Y', time.strptime(item['created_at'],'%a %b %d %H:%M:%S +0000 %Y')),
-				'jam'		: sntc['jam'],
+				'pukul'		: sntc['jam'],
 				'kondisi'	: sntc['kondisi']
 			})
 

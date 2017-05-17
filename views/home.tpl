@@ -34,7 +34,7 @@
                 html = "id => "+data[i].idTweet+"<br>";
                 html += "dari => "+data[i].dari+"<br>";
                 html += "sampai => "+data[i].sampai+"<br>";
-                html += "jam => "+data[i].jam+"<br>";
+                html += "pukul => "+data[i].pukul+"<br>";
                 html += "kondisi => "+data[i].kondisi+"<br>";
                 html += "<hr>";
 
