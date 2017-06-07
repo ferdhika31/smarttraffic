@@ -3,3 +3,4 @@ twython
 nltk
 openpyxl
 pymongo
+textblob
