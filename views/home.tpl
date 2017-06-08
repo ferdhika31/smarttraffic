@@ -1,7 +1,7 @@
 %rebase base apptitle=apptitle
 <form method="POST" id="newcat" action="#" onsubmit="return getresult();">
-    <!-- Refresh Kamus : <input type="checkbox" value="0" id="refereshKamus" name="refereshKamus" /><br> -->
-    Jumlah Tweet : <input type="number" name="maxTweet" id="maxTweet" value="10" max="200" /><br>
+    <!-- Refresh Kamus : -->
+ <input type="hidden" value="0" id="refereshKamus" name="refereshKamus" />   Jumlah Tweet : <input type="number" name="maxTweet" id="maxTweet" value="10" max="200" /><br>
 	<!-- <textarea cols="80" rows="25" name="teks" id="teks"></textarea><br/> -->
     <div class="formsection">
     	<input type="submit" name="save" value="Submit"/>
