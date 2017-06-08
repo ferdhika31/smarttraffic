@@ -69,7 +69,7 @@ def tweet():
 
 	# Inisialisasi atau kalo ada kamus yng baru
 	# init_kamus()
-	# init_data_jalan() 
+	# init_data_jalan()
 
 	kirim = []
 
