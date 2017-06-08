@@ -26,6 +26,7 @@ import nltk
 from textblob import TextBlob
 from textblob.classifiers import NaiveBayesClassifier
 
+from pprint import pprint
 
 '''
 GLOBAL VARIABLE
@@ -164,12 +165,10 @@ def tag(teks):
 # Function sentence
 # @Param tweet adalah tweet yang sudah di postag
 # @Param twt adalah tweet yang sudah di normal
-def sentence(tweet, twt):
+def sentence(tweet):
 	response.content_type = 'application/json'
  
 	res = remove_mention(tweet)
-
-	twt = twt.replace('.',' ')
  
 	res = res.split(' ')
 	tag = []    
@@ -184,38 +183,37 @@ def sentence(tweet, twt):
 	sampai=False
 
 	for kata in res:
-		tag.append(kata.split('/'))
+		if kata != '':
+			tag.append(kata.split('/'))
 
-		if tag[num][1] == 'CDP':
-			cdp=True
-			# print('Waktu : ' + tag[num][0])
- 			kirim.append(tag[num][0])
-		if tag[num][1] == 'NNP':
-			nnp=True
-			if tmp==1:
-				# print('Dari : ' + tag[num][0])
-				kirim.append(tag[num][0])
-			else:
-				sampai=True
-				# print('Sampai : ' + tag[num][0])
-				kirim.append(tag[num][0])
-			tmp=tmp+1
- 
-		num = num + 1
+			if tag[num][1] == 'CDP':
+				cdp=True
+				# print('Waktu : ' + tag[num][0])
+	 			kirim.append(tag[num][0])
+			if tag[num][1] == 'NNP':
+				nnp=True
+				if tmp==1:
+					# print('Dari : ' + tag[num][0])
+					kirim.append(tag[num][0])
+				else:
+					sampai=True
+					# print('Sampai : ' + tag[num][0])
+					kirim.append(tag[num][0])
+				tmp=tmp+1
+	 
+			num = num + 1
 
 	if cdp and nnp:
 		if sampai:
 			tampil = {
 				'jam' : kirim[0],
 				'dari' : kirim[1].replace('.', ' '),
-				'sampai' : kirim[2].replace('.', ' '),
-				'kondisi' : klasify(twt)   
+				'sampai' : kirim[2].replace('.', ' ')
 			};
 		else:
 			tampil = {
 				'jam' : kirim[0],
-				'dari' : kirim[1],
-				'kondisi' : klasify(twt) 
+				'dari' : kirim[1]
 			};
 
 	tampil = json.dumps(tampil, sort_keys=True, indent=5)

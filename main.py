@@ -56,6 +56,19 @@ def cekKla():
 
 	return klasify(txt)
 
+@route('/crawling')
+@post('/crawling')
+def crawling():
+	response.content_type = 'application/json'
+
+	# dishub_bdgkab
+	# LalinProyek
+	data = getTweet('tmc_restabesbdg',5)
+
+	kirim = json.dumps(data, sort_keys=True, indent=5) 
+
+	return kirim
+
 @route('/tweet')
 @post('/tweet')
 def tweet():
@@ -65,11 +78,11 @@ def tweet():
 
 	# dishub_bdgkab
 	# LalinProyek
-	data = getTweet('LalinProyek',maxTweet)
+	data = getTweet('tmc_restabesbdg', maxTweet)
 
 	# Inisialisasi atau kalo ada kamus yng baru
-	# init_kamus()
-	# init_data_jalan()
+	init_kamus()
+	init_data_jalan() 
 
 	kirim = []
 
@@ -103,26 +116,43 @@ def tweet():
 		# data jalan
 		txtNormal = jalan(txtNormal)
 
+		# Postag
+		postag = tag(txtNormal)
+
+		# Classify
+		classify = klasify(txtNormal.replace('.',' '))
+
 		# Sentence
-		sntc = json.loads(sentence(tag(jalan(txtNormal)), jalan(txtNormal)))
+		sntc = json.loads(sentence(postag))
 
 		if sntc.has_key("sampai"):
-			kirim.append({
+			txtSentence = {
 				'idTweet'   : item['id'],
 				'dari'		: sntc['dari'].replace('.',' '),
 				'sampai'	: sntc['sampai'].replace('.',' '),
 				'waktu'		: time.strftime('%d-%m-%Y', time.strptime(item['created_at'],'%a %b %d %H:%M:%S +0000 %Y')),
 				'pukul'		: sntc['jam'],
-				'kondisi'	: sntc['kondisi']
-			})
-		elif sntc.has_key("id"): #kalo ada data
-			kirim.append({
+				'kondisi'	: classify
+			}
+
+			kirim.append(txtSentence)
+			# Simpan text sentence ke db
+			if not db.TweetSentence.find_one({ 'idTweet': item['id'] }):
+				db.TweetSentence.insert_one(txtSentence)
+		elif sntc.has_key("dari"): #kalo ada data
+			txtSentence = {
 				'idTweet'   : item['id'],
 				'dari'		: sntc['dari'].replace('.',' '),
 				'waktu'		: time.strftime('%d-%m-%Y', time.strptime(item['created_at'],'%a %b %d %H:%M:%S +0000 %Y')),
 				'pukul'		: sntc['jam'],
-				'kondisi'	: sntc['kondisi']
-			})
+				'kondisi'	: classify
+			}
+
+			kirim.append(txtSentence)
+			# Simpan text sentence ke db
+			if not db.TweetSentence.find_one({ 'idTweet': item['id'] }):
+				db.TweetSentence.insert_one(txtSentence)
+
 
 	kirim = json.dumps(kirim, sort_keys=True, indent=5) 
 
@@ -169,14 +199,16 @@ def contoh():
 
 		#remove mention
 		txtNormal = remove_mention(txtNormal)
+		# data jalan
+		txtNormal = jalan(txtNormal)
 
 		kirim.append({
 			'id'        : item['id'],
 			'text'      : text,
 			'hari'		: time.strftime('%a', time.strptime(item['created_at'],'%a %b %d %H:%M:%S +0000 %Y')),
 			'created_at': time.strftime('%Y-%m-%d %H:%M:%S', time.strptime(item['created_at'],'%a %b %d %H:%M:%S +0000 %Y')),
-			'normal'	: jalan(txtNormal),
-			'tagger'	: tag(jalan(txtNormal)),
+			'normal'	: txtNormal,
+			'tagger'	: tag(txtNormal),
 			'sentence'	: sentence(tag(jalan(txtNormal)), jalan(txtNormal))
 		})
 
